@@ -1,0 +1,10 @@
+__pycache__
+*.egg-info
+dist
+
+.venv
+.cache
+.ruff_cache
+.pytest_cache
+pyrightconfig.json
+.idea

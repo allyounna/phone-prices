@@ -22,9 +22,6 @@
     <a href="https://conventionalcommits.org"/>
       <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white&color=blue">
     </a>
-    <a href="#"/>
-      <img src="https://img.shields.io/badge/GitLab%20CI-FC6D26?logo=gitlab&logoColor=fff">
-    </a>
   </p>
 </div>
 

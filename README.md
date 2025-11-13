@@ -53,7 +53,7 @@ pre-commit install
 pip install dvc
 ```
 
-- Add [data] (https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification)
+- Add [data](https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification)
 ```
 dvc add ./data/train.csv
 dvc add ./data/test.csv

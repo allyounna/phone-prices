@@ -14,7 +14,8 @@ class DataPreprocessor:
     """Класс для предобработки данных."""
 
     def __init__(self, config):
-        """Инициализация препроцессора данных.
+        """
+        Инициализация препроцессора данных.
 
         Args:
             config: Конфигурация препроцессора
@@ -25,7 +26,8 @@ class DataPreprocessor:
         self.feature_names = None
 
     def preprocess(self, df):
-        """Полный пайплайн предобработки.
+        """
+        Полный пайплайн предобработки.
 
         Args:
             df: Датасет с данными
@@ -67,7 +69,8 @@ class DataPreprocessor:
         return x_train_scaled, x_test_scaled, x_train, x_test, y_train, y_test
 
     def _handle_missing_values(self, x):
-        """Обработка пропущенных значений.
+        """
+        Обработка пропущенных значений.
 
         Args:
             x: Данные, который нужно заполнить

@@ -14,7 +14,8 @@ class DataLoader:
     """Класс для загрузки и валидации данных."""
 
     def __init__(self, config):
-        """Инициализация загрузки данных.
+        """
+        Инициализация загрузки данных.
 
         Args:
             config: Конфигурация загрузки
@@ -46,7 +47,8 @@ class DataLoader:
         ]
 
     def load_data(self, data_path):
-        """Загрузка данных с валидацией.
+        """
+        Загрузка данных с валидацией.
 
         Args:
             data_path: Путь к файлу с данными
@@ -69,7 +71,8 @@ class DataLoader:
         return df
 
     def _validate_data(self, df):
-        """Валидация структуры данных.
+        """
+        Валидация структуры данных.
 
         Args:
             df: DataFrame с данными

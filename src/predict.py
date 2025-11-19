@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 def predict(model, preprocessor, input_data):
-    """Выполнение предсказаний.
+    """
+    Выполнение предсказаний.
 
     Args:
         model: модель
@@ -77,13 +78,13 @@ def main():
             3: "Очень высокая стоимость",
         }
 
-        probabilities_list = probabilities if probabilities is not None else [None] * len(predictions)
-
-        for i, (pred, proba) in enumerate(zip(predictions, probabilities_list, strict=False)):
+        for i in range(len(predictions)):
+            pred = predictions[i]
+            proba = probabilities[i] if probabilities is not None else None
             category = price_categories.get(pred, "Неизвестно")
             print(f"Образец {i + 1}: {category} (класс {pred})")
             if proba is not None:
-                print(f"Вероятности: {dict(zip(range(4), [f'{p:.3f}' for p in proba], strict=False))}")
+                print(f"Вероятности: {dict(enumerate([f'{p:.3f}' for p in proba]))}")
 
         # Сохранение результатов
         results_df = input_df.copy()

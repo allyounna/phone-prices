@@ -19,7 +19,8 @@ class ModelTrainer:
     """Класс для обучения sklearn моделей с использованием PyTorch Lightning."""
 
     def __init__(self, config):
-        """Инициализация trainer.
+        """
+        Инициализация trainer.
 
         Args:
             config: Конфигурация trainer
@@ -28,7 +29,8 @@ class ModelTrainer:
         self.config = config
 
     def train_single_model(self, model_name, x_train, x_test, y_train, y_test):
-        """Обучение выбранной модели с использованием PyTorch Lightning.
+        """
+        Обучение выбранной модели с использованием PyTorch Lightning.
 
         Args:
             model_name: Название модели
@@ -74,7 +76,8 @@ class ModelTrainer:
         return model.model, results  # Возвращаем sklearn модель и результаты
 
     def _prepare_data(self, x_train, x_test, y_train, y_test):
-        """Подготовка данных в формате PyTorch DataLoader.
+        """
+        Подготовка данных в формате PyTorch DataLoader.
 
         Args:
             x_train: Тренировочные данные
@@ -103,7 +106,8 @@ class ModelTrainer:
         return train_loader, val_loader
 
     def _evaluate_model(self, model, x_train, x_test, y_train, y_test):
-        """Оценка модели после обучения.
+        """
+        Оценка модели после обучения.
 
         Args:
             model: модель

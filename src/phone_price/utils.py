@@ -23,7 +23,8 @@ def setup_logging():
 
 
 def load_config(config_path=None):
-    """Загрузка конфигурации.
+    """
+    Загрузка конфигурации.
 
     Args:
         config_path: Путь до конфигурации тренировки
@@ -78,7 +79,8 @@ def load_config(config_path=None):
 
 
 def get_latest_model_path(models_dir="models"):
-    """Получение пути к последней обученной модели.
+    """
+    Получение пути к последней обученной модели.
 
     Args:
         models_dir: путь до модели
@@ -102,7 +104,8 @@ def get_latest_model_path(models_dir="models"):
 
 
 def load_trained_model_and_preprocessor(models_dir="models"):
-    """Загрузка обученной модели и preprocessor.
+    """
+    Загрузка обученной модели и preprocessor.
 
     Args:
         models_dir: путь до директории с моделью и препроцессором
@@ -128,14 +131,22 @@ def load_trained_model_and_preprocessor(models_dir="models"):
 
     preprocessor = joblib.load(preprocessor_file)
 
-    # Загружаем конфигурацию для получения имени модели
+    # В функции load_trained_model_and_preprocessor:
+    # Альтернативный вариант с более строгой обработкой ошибок
     config_file = model_path / "config.yaml"
+    model_name = "unknown"
     if config_file.exists():
-        with open(config_file) as f:
-            config = yaml.safe_load(f)
-        model_name = config.get("model", {}).get("name", "unknown")
-    else:
-        model_name = "unknown"
+        try:
+            with open(config_file) as f:
+                config_data = yaml.safe_load(f)
+
+            if isinstance(config_data, dict):
+                config = config_data
+                model_name = config.get("model", {}).get("name", "unknown")
+            else:
+                logger.warning(f"Конфиг в {config_file} не является словарем")
+        except Exception as e:
+            logger.warning(f"Ошибка загрузки конфига: {e}")
 
     logger.info(f"Загружена модель: {model_name} из {model_file.name}")
     return model, preprocessor, model_path, model_name

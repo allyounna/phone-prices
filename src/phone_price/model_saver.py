@@ -15,7 +15,8 @@ class ModelSaver:
     """Класс для сохранения обученной модели и артефактов."""
 
     def __init__(self, models_dir="models"):
-        """Инициализация сохранения данных.
+        """
+        Инициализация сохранения данных.
 
         Args:
             models_dir: Директория, в которую сохранять модель
@@ -32,7 +33,8 @@ class ModelSaver:
         logger.info(f" Создана директория для модели: {self.model_path}")
 
     def save_model(self, model, model_name, results, preprocessor, config):
-        """Сохранение модели и связанных артефактов.
+        """
+        Сохранение модели и связанных артефактов.
 
         Args:
             model: модель

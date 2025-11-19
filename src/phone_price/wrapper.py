@@ -17,7 +17,8 @@ class SklearnLightningWrapper(pl.LightningModule):
     """Обертка для sklearn моделей в PyTorch Lightning."""
 
     def __init__(self, model_name, model_params, random_state=42):
-        """Инициализация обертки.
+        """
+        Инициализация обертки.
 
         Args:
             model_name: название модели, которую будем обучать
@@ -26,6 +27,7 @@ class SklearnLightningWrapper(pl.LightningModule):
 
         Returns:
             ничего
+
         """
         super().__init__()
         self.model_name = model_name
@@ -149,11 +151,15 @@ class SklearnLightningWrapper(pl.LightningModule):
         x_val = np.vstack(self.val_features)
         y_val = np.hstack(self.val_targets)
 
+        # Проверяем, что есть данные для оценки
+        if len(x_val) == 0:
+            return
+
         # Делаем предсказания на валидационных данных
         y_pred = self.model.predict(x_val)
         accuracy = accuracy_score(y_val, y_pred)
 
-        self.log("val_accuracy", accuracy, prog_bar=True)
+        self.log("val_accuracy", float(accuracy), prog_bar=True)  # Явное преобразование
 
     def configure_optimizers(self):
         """Sklearn модели не требуют оптимизаторов."""

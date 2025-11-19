@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 def run_training_pipeline(data_path, config_path=None, models_dir="models"):
-    """Запуск полного пайплайна обучения.
+    """
+    Запуск полного пайплайна обучения.
 
     Args:
         data_path: путь до тренировочных данных

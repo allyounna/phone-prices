@@ -84,6 +84,11 @@ ignore = [
 [tool.ruff.lint.isort]
 force-single-line = true
 
+[tool.pyright]
+reportAttributeAccessIssue = false
+reportOptionalMemberAccess = false
+reportGeneralTypeIssues = false
+
 [tool.yamlfix]
 line_length = 120
 explicit_start = false

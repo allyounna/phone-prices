@@ -15,7 +15,13 @@ classifiers = [
 ]
 requires-python = ">=3.12,<3.13"
 dependencies = [
-
+    "joblib>=1.5.2",
+    "numpy>=2.3.5",
+    "pandas>=2.3.3",
+    "pytorch-lightning>=2.5.6",
+    "pyyaml>=6.0.3",
+    "scikit-learn>=1.7.2",
+    "torch>=2.9.1",
 ]
 
 [dependency-groups]
@@ -56,6 +62,10 @@ select = [
 ignore = [
   "PLC0414",  # useless-import-alias
   "D105",     # undocumented-magic-method
+  "D100",  # Missing docstring in public module
+  "D203",  # конфликт с D211
+  "D212",  # конфликт с D213
+  "D417",  # Missing argument description in docstring
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -73,6 +83,11 @@ ignore = [
 
 [tool.ruff.lint.isort]
 force-single-line = true
+
+[tool.pyright]
+reportAttributeAccessIssue = false
+reportOptionalMemberAccess = false
+reportGeneralTypeIssues = false
 
 [tool.yamlfix]
 line_length = 120

@@ -1,4 +1,6 @@
 [core]
-    remote = localremote
-['remote "localremote"']
-    url = ../../dvc_storage
+    remote = minio
+['remote "minio"']
+    url = s3://dvc/phone
+    endpointurl = http://84.237.53.145:9000
+    use_ssl = false

@@ -87,7 +87,7 @@ def main():
     parser.add_argument(
         "--data_path",
         type=str,
-        required=True,
+        default="data/train.csv",
         help="Path to the CSV data file",
     )
     parser.add_argument(

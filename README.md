@@ -67,3 +67,25 @@ mkdir ../dvc_storage
 dvc remote add -d localremote ../dvc_storage
 dvc push
 ```
+
+### Config params:
+
+```
+data:
+  test_size: percentage of test data (float)
+  random_state: random state for reproducibility (int)
+
+model:
+  name: name of chosen model ("random_forest", "svm", "logistic_regression")
+  save: the flag for saving the model (1 - saving, 0 - not saving)
+  params:
+    random_forest:
+      n_estimators: amount of trees (int)
+      max_depth: maximal depth of trees (int)
+    svm:
+      kernel: the type of core for data conversion ("linear", "poly", "rbf", "sigmoid")
+      C: regularization parameter (float)
+    logistic_regression:
+      max_iter: maximum number of training iterations (int)
+      C: regularization parameter (float)
+```

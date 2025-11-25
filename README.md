@@ -45,27 +45,18 @@ source .venv/bin/activate
 pre-commit install
 ```
 
-##### Data Managment
+#### Data managment
 
-- Install dvc
-
-```
-pip install dvc
-```
-
-- Add [data](https://www.kaggle.com/datasets/iabhishekofficial/mobile-price-classification)
+Get env.sh from your colleague
 
 ```
-dvc add ./data/train.csv
-dvc add ./data/test.csv
+source env.sh
 ```
 
-- Create dvc storage
+then you can pull dataset and other essentials
 
 ```
-mkdir ../dvc_storage
-dvc remote add -d localremote ../dvc_storage
-dvc push
+dvc pull
 ```
 
 ### Config params:

@@ -1,1 +1,1 @@
-mlflow models serve -m models:/PriceModel/Production --no-conda -p 6000
+mlflow models serve -m models:/PriceModel/1 --no-conda -p 6000

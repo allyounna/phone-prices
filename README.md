@@ -59,6 +59,46 @@ then you can pull dataset and other essentials
 dvc pull
 ```
 
+### Run mlflow server with
+
+```
+bash src/services/run_mlflow.sh
+```
+
+### Run mlflow inference server
+
+Create docker for your model
+
+```
+mlflow models build-docker -m models:/PriceModel/1 -n price-model:latest
+```
+
+and run it!
+
+```
+docker run -p 6000:8080 price-model:latest
+```
+
+or
+
+```
+mlflow models serve -m models:/PriceModel/1 --no-conda -p 6000
+```
+
+if you want complete docker
+
+test your container with
+
+```
+curl -X POST http://localhost:6000/invocations \
+  -H "Content-Type: application/json" \
+  -d '{
+        "dataframe_split": {
+          "data": [[4096, 5000, 6.5, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+        }
+      }'
+```
+
 ### Run training with
 
 ```

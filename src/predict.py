@@ -2,12 +2,20 @@
 
 import argparse
 import logging
+import time
 
 import pandas as pd
 
+import mlflow
 from phone_price.data_preprocessor import DataPreprocessor
 from phone_price.utils import load_trained_model_and_preprocessor
 from phone_price.utils import setup_logging
+
+mlflow.set_tracking_uri("http://localhost:5000")
+
+model = mlflow.pyfunc.load_model(
+    model_uri="models:/PriceModel/Production",
+)
 
 logger = logging.getLogger(__name__)
 
@@ -25,13 +33,17 @@ def predict(model, preprocessor: DataPreprocessor, input_data):
         Предсказания, вероятности предсказаний
 
     """
+    start = time.time()
     # Предобработка входных данных
     processed_data = preprocessor.preprocess_single(input_data)
 
     # Предсказание
     predictions = model.predict(processed_data)
     prediction_probas = model.predict_proba(processed_data) if hasattr(model, "predict_proba") else None
-
+    latency = time.time() - start
+    with mlflow.start_run(run_name="inference", nested=True):
+        mlflow.log_metric("latency_ms", latency * 1000)
+        mlflow.log_metric("n_rows", len(input_data))
     return predictions, prediction_probas
 
 

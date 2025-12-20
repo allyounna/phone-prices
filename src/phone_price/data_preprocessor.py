@@ -68,13 +68,13 @@ class DataPreprocessor:
         x_train_scaled: pd.DataFrame = pd.DataFrame(
             x_train_scaled_array,
             columns=columns,
-            index=pd.Axes(x_train.index),
+            index=pd.Index(x_train.index),
         )
 
         x_test_scaled: pd.DataFrame = pd.DataFrame(
             x_test_scaled_array,
             columns=columns,
-            index=pd.Axes(x_test.index),
+            index=pd.Index(x_test.index),
         )
 
         logger.info("Предобработка данных завершена")
@@ -108,6 +108,9 @@ class DataPreprocessor:
         if "price_range" in df_input.columns:
             df_input = df_input.drop(columns=["price_range"])
 
+        if "id" in df_input.columns:
+            df_input = df_input.drop(columns=["id"])
+
         # Сохраняем имена признаков (явная типизация для type checker)
         self.feature_names: list[str] = list(df_input.columns)
 
@@ -120,7 +123,7 @@ class DataPreprocessor:
         # Преобразуем результат обратно в DataFrame
         df_scaled: pd.DataFrame = pd.DataFrame(
             scaled_array,
-            columns=pd.Axes(self.feature_names),
+            columns=pd.Index(self.feature_names),
             index=df_processed.index,
         )
 

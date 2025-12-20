@@ -16,12 +16,20 @@ classifiers = [
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "dvc-s3>=3.2.2",
+    "ipywidgets>=8.1.8",
     "joblib>=1.5.2",
+    "jupyter>=1.1.1",
+    "nbsphinx>=0.9.7",
     "numpy>=2.3.5",
     "pandas>=2.3.3",
     "pytorch-lightning>=2.5.6",
     "pyyaml>=6.0.3",
     "scikit-learn>=1.7.2",
+    "sphinx>=4.0",
+    "sphinx-autobuild>=2025.8.25",
+    "sphinx-autodoc-typehints>=3.0.1",
+    "sphinx-rtd-theme>=3.0.2",
+    "sphinxcontrib-jupyter>=0.5.10",
     "torch>=2.9.1",
 ]
 
@@ -89,6 +97,8 @@ force-single-line = true
 reportAttributeAccessIssue = false
 reportOptionalMemberAccess = false
 reportGeneralTypeIssues = false
+venvPath = "."
+venv = ".venv"
 
 [tool.yamlfix]
 line_length = 120
@@ -96,3 +106,8 @@ explicit_start = false
 sequence_style = "keep_style"
 whitelines = 1
 section_whitelines = 1
+
+[tool.uv.workspace]
+members = [
+    "phone-prices-docs/docs",
+]

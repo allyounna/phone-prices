@@ -59,6 +59,18 @@ then you can pull dataset and other essentials
 dvc pull
 ```
 
+### Run training with
+
+```
+python src/train.py
+```
+
+### Run inference with
+
+```
+python src/predict.py --input_data data/test.csv
+```
+
 ### Config params:
 
 ```

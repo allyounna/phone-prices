@@ -1,0 +1,9 @@
+defaults:
+  - _self_
+  - data: default
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+input_data: data/train.csv
+model_stage: None
+models_dir: models

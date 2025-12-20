@@ -1,0 +1,9 @@
+defaults:
+  - _self_
+  - data: default
+  - model: random_forest
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+data_path: data/train.csv
+models_dir: models

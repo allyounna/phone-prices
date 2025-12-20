@@ -1,10 +1,13 @@
 """Mobile Price Classification - Prediction Script."""
 
-import argparse
 import logging
 import time
+from typing import cast
 
+import hydra
 import pandas as pd
+from omegaconf import DictConfig
+from omegaconf import OmegaConf
 
 import mlflow
 from phone_price.data_preprocessor import DataPreprocessor
@@ -12,10 +15,6 @@ from phone_price.utils import load_trained_model_and_preprocessor
 from phone_price.utils import setup_logging
 
 mlflow.set_tracking_uri("http://localhost:5000")
-
-model = mlflow.pyfunc.load_model(
-    model_uri="models:/PriceModel/Production",
-)
 
 logger = logging.getLogger(__name__)
 
@@ -47,35 +46,23 @@ def predict(model, preprocessor: DataPreprocessor, input_data):
     return predictions, prediction_probas
 
 
-def main():
-    """Запуск скрипта."""
-    parser = argparse.ArgumentParser(description="Mobile Price Classification Prediction")
-
-    parser.add_argument(
-        "--input_data",
-        type=str,
-        required=True,
-        help="Path to input data for prediction",
+@hydra.main(version_base=None, config_path="configs", config_name="predict")
+def main(cfg: DictConfig):
+    """Load script."""
+    args = cast(dict, OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True))
+    model = mlflow.pyfunc.load_model(
+        model_uri=f"models:/PriceModel/{args['model_stage']}",
     )
-    parser.add_argument(
-        "--models_dir",
-        type=str,
-        default="models",
-        help="Directory with trained models",
-    )
-
-    args = parser.parse_args()
-
     setup_logging()
 
     try:
         # Загрузка данных
-        logger.info(f"Загрузка данных из {args.input_data}")
-        input_df = pd.read_csv(args.input_data)
+        logger.info(f"Загрузка данных из {args['input_data']}")
+        input_df = pd.read_csv(args["input_data"])
 
         # Загрузка модели и preprocessor
-        logger.info(f"Загрузка модели из {args.models_dir}")
-        model, preprocessor, model_path, model_name = load_trained_model_and_preprocessor(args.models_dir)
+        logger.info(f"Загрузка модели из {args['models_dir']}")
+        model, preprocessor, model_path, model_name = load_trained_model_and_preprocessor(args["models_dir"])
         print(preprocessor)
         # Выполнение предсказаний
         predictions, probabilities = predict(model, preprocessor, input_df)

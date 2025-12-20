@@ -1,0 +1,7 @@
+name: random_forest
+save: 1
+
+params:
+  random_forest:
+    n_estimators: 100
+    max_depth: 10

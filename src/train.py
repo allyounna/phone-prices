@@ -1,7 +1,11 @@
 """Mobile Price Classification - Training Script."""
 
-import argparse
 import logging
+from typing import cast
+
+import hydra
+from omegaconf import DictConfig
+from omegaconf import OmegaConf
 
 import mlflow
 from mlflow.sklearn import autolog
@@ -9,13 +13,12 @@ from phone_price.data_loader import DataLoader
 from phone_price.data_preprocessor import DataPreprocessor
 from phone_price.model_saver import ModelSaver
 from phone_price.model_trainer import ModelTrainer
-from phone_price.utils import load_config
 from phone_price.utils import setup_logging
 
 logger = logging.getLogger(__name__)
 
 
-def run_training_pipeline(data_path, config_path=None, models_dir="models"):
+def run_training_pipeline(config: dict):
     """
     Запуск полного пайплайна обучения.
 
@@ -30,13 +33,6 @@ def run_training_pipeline(data_path, config_path=None, models_dir="models"):
 
     logger.info("Запуск обучения")
 
-    # Загрузка конфигурации
-    config = load_config(config_path)
-
-    # Проверка конфигурации модели
-    if "model" not in config:
-        raise ValueError("Конфигурация должна содержать раздел 'model'")
-
     model_name = config["model"]["name"]
     logger.info(f"Выбрана модель: {model_name}")
 
@@ -48,12 +44,12 @@ def run_training_pipeline(data_path, config_path=None, models_dir="models"):
         model_trainer = ModelTrainer(config)
 
         # Всегда инициализируем model_saver, но используем только если нужно
-        model_saver = ModelSaver(models_dir) if config.get("model", {}).get("save", True) else None
+        model_saver = ModelSaver(config["models_dir"]) if config.get("model", {}).get("save", True) else None
 
         try:
             # Этап 1: Загрузка данных
             logger.info("Загрузка данных.")
-            df = data_loader.load_data(data_path)
+            df = data_loader.load_data(config["data_path"])
 
             # Этап 2: Предобработка
             logger.info("Предобработка данных..")
@@ -75,6 +71,8 @@ def run_training_pipeline(data_path, config_path=None, models_dir="models"):
             logger.info(f"Test Accuracy: {results['test_accuracy']:.4f}")
             mlflow.log_dict(results, "training_metrics.json")
 
+            mlflow.log_artifact("model.pkl")
+
             if model_saver is not None:
                 # Этап 4: Сохранение модели
                 logger.info("Сохранение модели....")
@@ -88,36 +86,14 @@ def run_training_pipeline(data_path, config_path=None, models_dir="models"):
             raise
 
 
-def main():
-    """Основная функция для запуска обучения из командной строки."""
-    parser = argparse.ArgumentParser(description="Mobile Price Classification Training")
-
-    parser.add_argument(
-        "--data_path",
-        type=str,
-        default="data/train.csv",
-        help="Path to the CSV data file",
-    )
-    parser.add_argument(
-        "--config",
-        type=str,
-        default="config/default.yaml",
-        help="Path to configuration YAML file",
-    )
-    parser.add_argument(
-        "--models_dir",
-        type=str,
-        default="models",
-        help="Directory to save trained models",
-    )
-
-    args = parser.parse_args()
-
+@hydra.main(version_base=None, config_path="configs", config_name="train")
+def main(cfg: DictConfig):
+    """Load script."""
+    cfg_dict = cast(dict, OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True))
     # Настройка логирования
     setup_logging()
-
     # Запуск пайплайна
-    run_training_pipeline(args.data_path, args.config, args.models_dir)
+    run_training_pipeline(cfg_dict)
 
 
 if __name__ == "__main__":

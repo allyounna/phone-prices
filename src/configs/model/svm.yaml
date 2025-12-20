@@ -1,0 +1,7 @@
+name: svm
+save: 1
+
+params:
+  svm:
+    kernel: rbf
+    C: 1.0

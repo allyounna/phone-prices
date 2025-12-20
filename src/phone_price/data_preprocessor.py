@@ -25,7 +25,7 @@ class DataPreprocessor:
         self.scaler = StandardScaler()
         self.feature_names = None
 
-    def preprocess(self, df):
+    def preprocess(self, df: pd.DataFrame):
         """
         Полный пайплайн предобработки.
 
@@ -39,34 +39,94 @@ class DataPreprocessor:
         logger.info("Начало предобработки данных")
 
         # Разделение на признаки и целевую переменную
-        x = df.drop("price_range", axis=1)
-        y = df["price_range"]
+        x: pd.DataFrame = df.drop(columns=["price_range"])
+        y: pd.Series = pd.Series(df["price_range"])
 
-        # Сохранение имен признаков
-        self.feature_names = x.columns.tolist()
+        # Сохраняем имена признаков (явная типизация)
+        self.feature_names: list[str] = list(x.columns)
 
         # Обработка пропущенных значений
-        x = self._handle_missing_values(x)
+        x_processed: pd.DataFrame = self._handle_missing_values(x)
 
         # Разделение данных
         x_train, x_test, y_train, y_test = train_test_split(
-            x,
+            x_processed,
             y,
             test_size=self.config["data"]["test_size"],
             random_state=self.config["data"]["random_state"],
             stratify=y,
         )
 
-        # Масштабирование (для всех моделей, так как RandomForest тоже может выиграть)
-        x_train_scaled = self.scaler.fit_transform(x_train)
-        x_test_scaled = self.scaler.transform(x_test)
+        # Масштабирование
+        x_train_scaled_array = self.scaler.fit_transform(x_train)
+        x_test_scaled_array = self.scaler.transform(x_test)
 
-        # Преобразование обратно в DataFrame для совместимости
-        x_train_scaled = pd.DataFrame(x_train_scaled, columns=self.feature_names)
-        x_test_scaled = pd.DataFrame(x_test_scaled, columns=self.feature_names)
+        # Явно задаем Axes (Index) для columns
+        columns: pd.Index = pd.Index(self.feature_names)
+
+        # Преобразование обратно в DataFrame
+        x_train_scaled: pd.DataFrame = pd.DataFrame(
+            x_train_scaled_array,
+            columns=columns,
+            index=pd.Axes(x_train.index),
+        )
+
+        x_test_scaled: pd.DataFrame = pd.DataFrame(
+            x_test_scaled_array,
+            columns=columns,
+            index=pd.Axes(x_test.index),
+        )
 
         logger.info("Предобработка данных завершена")
-        return x_train_scaled, x_test_scaled, x_train, x_test, y_train, y_test
+
+        return (
+            x_train_scaled,
+            x_test_scaled,
+            x_train,
+            x_test,
+            y_train,
+            y_test,
+        )
+
+    def preprocess_single(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Предобработка данных для одиночного inference без разделения на train/test.
+
+        Args:
+            df: DataFrame с входными данными (1 или более строк)
+
+        Returns:
+            DataFrame после всех преобразований, совместимый с обученной моделью.
+
+        """
+        logger.info("Начало предобработки данных для inference")
+
+        # Работаем с копией, чтобы не модифицировать входной DataFrame
+        df_input: pd.DataFrame = df.copy()
+
+        # Удаляем целевую переменную, если она присутствует
+        if "price_range" in df_input.columns:
+            df_input = df_input.drop(columns=["price_range"])
+
+        # Сохраняем имена признаков (явная типизация для type checker)
+        self.feature_names: list[str] = list(df_input.columns)
+
+        # Обработка пропусков
+        df_processed: pd.DataFrame = self._handle_missing_values(df_input)
+
+        # Масштабирование (используется обученный scaler)
+        scaled_array = self.scaler.transform(df_processed)
+
+        # Преобразуем результат обратно в DataFrame
+        df_scaled: pd.DataFrame = pd.DataFrame(
+            scaled_array,
+            columns=pd.Axes(self.feature_names),
+            index=df_processed.index,
+        )
+
+        logger.info("Предобработка данных для inference завершена")
+
+        return df_scaled
 
     def _handle_missing_values(self, x):
         """

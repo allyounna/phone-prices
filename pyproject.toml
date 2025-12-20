@@ -89,6 +89,8 @@ force-single-line = true
 reportAttributeAccessIssue = false
 reportOptionalMemberAccess = false
 reportGeneralTypeIssues = false
+venvPath = "."
+venv = ".venv"
 
 [tool.yamlfix]
 line_length = 120

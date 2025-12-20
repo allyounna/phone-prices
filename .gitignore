@@ -13,3 +13,5 @@ env.sh
 /models
 *.log
 *.csv
+*.db
+mlruns

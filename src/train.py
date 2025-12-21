@@ -71,7 +71,7 @@ def run_training_pipeline(config: dict):
             logger.info(f"Test Accuracy: {results['test_accuracy']:.4f}")
             mlflow.log_dict(results, "training_metrics.json")
 
-            mlflow.log_artifact("model.pkl")
+            # mlflow.log_artifact("model.pkl")
 
             if model_saver is not None:
                 # Этап 4: Сохранение модели
